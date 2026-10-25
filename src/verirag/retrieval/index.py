@@ -11,7 +11,7 @@ import numpy as np
 from verirag.domain.chunk import Chunk
 from verirag.retrieval.documents import find_documents, load_chunks
 from verirag.retrieval.embedding import DEFAULT_MODEL, Embedder
-from verirag.retrieval.hybrid import HybridRetriever
+from verirag.retrieval.hybrid import HybridRetriever, Mode
 
 FORMAT_VERSION = 1
 
@@ -71,7 +71,7 @@ def build_index(
     return BuildReport(tuple(embedded), tuple(reused), tuple(removed))
 
 
-def load_retriever(index_path: Path, embedder: Embedder, hybrid: bool = True) -> HybridRetriever:
+def load_retriever(index_path: Path, embedder: Embedder, mode: Mode = "hybrid") -> HybridRetriever:
     """Read an index file and return a retriever that searches it."""
     if not index_path.exists():
         raise FileNotFoundError(
@@ -81,7 +81,7 @@ def load_retriever(index_path: Path, embedder: Embedder, hybrid: bool = True) ->
     entries = [e for name in sorted(document["files"]) for e in document["files"][name]["chunks"]]
     chunks = [Chunk(e["text"], e["source"], e["page"]) for e in entries]
     vectors = np.array([e["embedding"] for e in entries], dtype=np.float32).reshape(len(chunks), -1)
-    return HybridRetriever(chunks, vectors, embedder, hybrid=hybrid)
+    return HybridRetriever(chunks, vectors, embedder, mode=mode)
 
 
 def list_sources(index_path: Path) -> list[str]:
