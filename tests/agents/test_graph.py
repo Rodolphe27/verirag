@@ -133,3 +133,11 @@ def test_a_writer_that_never_produces_readable_output_ends_in_a_refusal() -> Non
     result = run(["nope"] * 3, [])
     assert result.answer.status is AnswerStatus.REFUSED
     assert len(result.writer_llm.prompts) == 3
+
+
+def test_the_trace_explains_why_claims_failed() -> None:
+    result = run([draft_reply("Fines are 1 euro.")], [FAIL], max_retries=0)
+    verifier_data = dict(result.tracer.records)["verifier"]
+    assert verifier_data["failures"] == [
+        {"claim": "Fines are 1 euro.", "reason": "the sources give no such figure"}
+    ]

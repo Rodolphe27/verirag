@@ -90,6 +90,10 @@ def build_graph(
                 "attempt": state["attempts"],
                 "claims": len(verdict.items),
                 "unsupported": len(verdict.unsupported),
+                "failures": [
+                    {"claim": item.claim.text, "reason": item.reason}
+                    for item in verdict.unsupported
+                ],
             },
         )
         return {"verdict": verdict, "feedback": verdict.feedback()}
