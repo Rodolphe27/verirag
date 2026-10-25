@@ -103,14 +103,14 @@ What the numbers say:
 
 What this evaluation does **not** show: whether the wording of each answer is fully correct. The
 code guarantees that each claim has a quote that exists in a retrieved passage; it does not grade
-the final text. The author read a sample of the answers against the articles and found them
-consistent (for example the fine of up to EUR 35 000 000 or 7 % of turnover for prohibited
-practices), but this was a sample read, not a full review.
+the final text. Four of the saved answers were read against the articles and matched them (for
+example the fine of up to EUR 35 000 000 or 7 % of turnover for prohibited practices). The other
+answers were not reviewed, so this is a spot check, not a full review.
 
 ## Limits
 
-- One corpus (EU legal text), 35 questions written by the author, who also chose the expected
-  articles. One model provider was used live (Gemini); the Anthropic adapter is tested with mocked
+- One corpus (EU legal text) and 35 questions. The questions and their expected articles were
+  written inside the project, not by independent annotators. One model provider was used live (Gemini); the Anthropic adapter is tested with mocked
   HTTP only. A second person labelling the questions would be a better test.
 - The hit rate uses files, not exact passages: an article counts as correct if it is the right
   article, even when the best passage inside it is another one.

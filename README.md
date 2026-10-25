@@ -248,8 +248,8 @@ runs it. The work was planned and tracked as small issues on the
 
 Known limits, stated plainly:
 
-- **The evaluation is small.** 35 questions, one corpus, written by the author. It is a smoke test,
-  not a benchmark.
+- **The evaluation is small.** 35 questions, one corpus, written inside the project and not by
+  independent annotators. It is a smoke test, not a benchmark.
 - **Verification checks that the proof exists, not that it entails the claim.** The code confirms the
   quoted words are in a passage. Whether those words logically support the claim is still the
   verifier model's judgement.
