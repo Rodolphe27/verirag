@@ -185,3 +185,35 @@ def test_evaluate_end_to_end_needs_an_api_key(index: Path, tmp_path: Path) -> No
     result = run("--index", str(index), "evaluate", "--questions", str(questions), "--end-to-end")
     assert result.code == 1
     assert "GEMINI_API_KEY" in result.err
+
+
+def test_resume_asks_again_only_the_questions_that_failed(index: Path, tmp_path: Path) -> None:
+    questions = tmp_path / "q.json"
+    questions.write_text(
+        json.dumps(
+            {
+                "answerable": [{"question": "How high are fines?", "sources": ["article-99.md"]}],
+                "unanswerable": [],
+            }
+        ),
+        encoding="utf-8",
+    )
+    saved = tmp_path / "answers.json"
+    failed = [
+        {
+            "question": "How high are fines?",
+            "answerable": True,
+            "status": "error",
+            "correct_source": False,
+            "text": "all models failed, last error: model call failed with HTTP 503",
+            "citations": [],
+        }
+    ]
+    saved.write_text(json.dumps(failed), encoding="utf-8")
+    llm = ScriptedLLM(json.dumps(DRAFT), json.dumps(VERDICT))
+    result = run(
+        "--index", str(index), "evaluate", "--questions", str(questions),
+        "--end-to-end", "--resume", str(saved), "--output", str(saved), llm=llm,
+    )  # fmt: skip
+    assert "| Answerable: answered, cites a correct article | 1/1 (100%) |" in result.out
+    assert json.loads(saved.read_text(encoding="utf-8"))[0]["status"] == "answered"

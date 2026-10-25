@@ -13,7 +13,6 @@ Exit codes: 0 = verified answer, 2 = refused (a normal outcome, not an error),
 from __future__ import annotations
 
 import argparse
-import json
 import os
 import sys
 from collections.abc import MutableMapping, Sequence
@@ -25,7 +24,12 @@ from verirag.assistant import Assistant
 from verirag.config import load_env_file
 from verirag.domain.answer import Answer, AnswerStatus
 from verirag.evaluation.cases import load_cases
-from verirag.evaluation.end_to_end import evaluate_end_to_end, format_end_to_end
+from verirag.evaluation.end_to_end import (
+    evaluate_end_to_end,
+    format_end_to_end,
+    load_outcomes,
+    save_outcomes,
+)
 from verirag.evaluation.retrieval import evaluate_retrieval, format_table
 from verirag.llm.factory import create_llm
 from verirag.mcp_server import create_server
@@ -108,14 +112,12 @@ def _evaluate(
             MemoryTracer(),
             min_score=args.min_score,
         )
-        report = evaluate_end_to_end(assistant, cases)
+        previous = load_outcomes(Path(args.resume)) if args.resume else []
+        report = evaluate_end_to_end(assistant, cases, previous)
         print("\nEnd to end", file=out)
         print(format_end_to_end(report), file=out)
         if args.output:
-            rows = [vars(outcome) for outcome in report.outcomes]
-            Path(args.output).write_text(
-                json.dumps(rows, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
-            )
+            save_outcomes(report, Path(args.output))
     return 0
 
 
@@ -194,6 +196,10 @@ def _parser() -> argparse.ArgumentParser:
         help="also run the whole system on every question (needs a model and its API key)",
     )
     evaluate.add_argument("--output", help="with --end-to-end: save every answer to this JSON file")
+    evaluate.add_argument(
+        "--resume",
+        help="with --end-to-end: a saved JSON file; only its failed questions are asked again",
+    )
 
     serve = commands.add_parser("serve", help="run an MCP server for AI applications")
     serve.add_argument(

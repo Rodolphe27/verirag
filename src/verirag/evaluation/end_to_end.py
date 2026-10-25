@@ -1,6 +1,9 @@
 from __future__ import annotations
 
+import json
+from collections.abc import Sequence
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Protocol
 
 from verirag.domain.answer import Answer, AnswerStatus
@@ -62,12 +65,38 @@ class EndToEndReport:
         return sum(1 for o in self.outcomes if o.answerable is answerable and o.status != "error")
 
 
-def evaluate_end_to_end(asker: Asker, cases: CaseSet) -> EndToEndReport:
+def evaluate_end_to_end(
+    asker: Asker, cases: CaseSet, previous: Sequence[Outcome] = ()
+) -> EndToEndReport:
     """Ask every question. A model error (network, quota) is recorded as an
-    error and left out of the rates, so a busy server cannot look like a refusal."""
-    outcomes = [_run(asker, case, answerable=True) for case in cases.answerable]
-    outcomes += [_run(asker, case, answerable=False) for case in cases.unanswerable]
+    error and left out of the rates, so a busy server cannot look like a refusal.
+
+    `previous` holds the outcomes of an earlier run. Questions that finished
+    there (answered or refused) are kept as they are; only questions that
+    failed with an error are asked again. This lets a run be completed after
+    a busy period without repeating, or hiding, the work already done.
+    """
+    finished = {o.question: o for o in previous if o.status != "error"}
+
+    def outcome(case: Case, answerable: bool) -> Outcome:
+        old = finished.get(case.question)
+        if old is not None and old.answerable is answerable:
+            return old
+        return _run(asker, case, answerable)
+
+    outcomes = [outcome(case, answerable=True) for case in cases.answerable]
+    outcomes += [outcome(case, answerable=False) for case in cases.unanswerable]
     return EndToEndReport(tuple(outcomes))
+
+
+def save_outcomes(report: EndToEndReport, path: Path) -> None:
+    rows = [vars(outcome) for outcome in report.outcomes]
+    path.write_text(json.dumps(rows, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+
+
+def load_outcomes(path: Path) -> list[Outcome]:
+    rows = json.loads(path.read_text(encoding="utf-8"))
+    return [Outcome(**{**row, "citations": tuple(row["citations"])}) for row in rows]
 
 
 def _run(asker: Asker, case: Case, answerable: bool) -> Outcome:

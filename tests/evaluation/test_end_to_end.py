@@ -1,6 +1,14 @@
+from pathlib import Path
+
 from verirag.domain.answer import Answer, AnswerStatus
 from verirag.evaluation.cases import Case, CaseSet
-from verirag.evaluation.end_to_end import EndToEndReport, evaluate_end_to_end, format_end_to_end
+from verirag.evaluation.end_to_end import (
+    EndToEndReport,
+    evaluate_end_to_end,
+    format_end_to_end,
+    load_outcomes,
+    save_outcomes,
+)
 from verirag.ports import LLMError
 
 CASES = CaseSet(
@@ -70,3 +78,36 @@ def test_model_errors_are_left_out_of_the_rates_and_shown_separately() -> None:
     assert "| Answerable: answered, cites a correct article | 1/3 (33%) |" in table
     assert "| Unanswerable: refused | 2/3 (67%) |" in table
     assert "| Runs that failed with a model error (left out above) | 1 |" in table
+
+
+class Counting:
+    """Answers with a verified answer and remembers which questions it was asked."""
+
+    def __init__(self) -> None:
+        self.asked: list[str] = []
+
+    def ask(self, question: str) -> Answer:
+        self.asked.append(question)
+        return answered("d.md")
+
+
+def test_resume_asks_only_the_questions_that_failed_before() -> None:
+    first = report()  # q4 failed with a model error; everything else finished
+    counter = Counting()
+    second = evaluate_end_to_end(counter, CASES, previous=first.outcomes)
+    assert counter.asked == ["q4"]
+    assert second.errors == 0
+    assert second.answered_with_correct_source == 2  # q1 kept from before, q4 now answered
+
+
+def test_resume_keeps_earlier_results_exactly_as_they_were() -> None:
+    first = report()
+    second = evaluate_end_to_end(Counting(), CASES, previous=first.outcomes)
+    assert second.outcomes[0] == first.outcomes[0]
+    assert second.wrongly_refused == first.wrongly_refused
+
+
+def test_outcomes_survive_a_round_trip_through_a_file(tmp_path: Path) -> None:
+    first = report()
+    save_outcomes(first, tmp_path / "out.json")
+    assert tuple(load_outcomes(tmp_path / "out.json")) == first.outcomes

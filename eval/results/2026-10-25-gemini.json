@@ -1,0 +1,317 @@
+[
+  {
+    "question": "What counts as an AI system according to the regulation?",
+    "answerable": true,
+    "status": "error",
+    "correct_source": false,
+    "text": "all models failed, last error: model call failed with HTTP 503",
+    "citations": []
+  },
+  {
+    "question": "How does the law define a provider of an AI system?",
+    "answerable": true,
+    "status": "answered",
+    "correct_source": true,
+    "text": "A provider is defined as a natural or legal person, public authority, agency, or other body. This entity develops an AI system or general-purpose AI model. Alternatively, they have an AI system or general-purpose AI model developed. They place the system on the market or put it into service under their own name or trademark. This applies whether the service is provided for payment or free of charge.",
+    "citations": [
+      "ai-act-article-003.md"
+    ]
+  },
+  {
+    "question": "What is a deployer?",
+    "answerable": true,
+    "status": "error",
+    "correct_source": false,
+    "text": "all models failed, last error: model call failed with HTTP 503",
+    "citations": []
+  },
+  {
+    "question": "Which AI practices are banned?",
+    "answerable": true,
+    "status": "answered",
+    "correct_source": true,
+    "text": "The EU AI Act prohibits specific AI practices as outlined in Article 5.",
+    "citations": [
+      "ai-act-article-005.md"
+    ]
+  },
+  {
+    "question": "Is it allowed to rank people by their social behaviour and treat them worse because of it?",
+    "answerable": true,
+    "status": "error",
+    "correct_source": false,
+    "text": "all models failed, last error: model call failed with HTTP 503",
+    "citations": []
+  },
+  {
+    "question": "May an employer use AI to detect the emotions of workers?",
+    "answerable": true,
+    "status": "answered",
+    "correct_source": true,
+    "text": "The use of AI systems to infer emotions of natural persons in the workplace is prohibited, except when intended for medical or safety reasons. If an emotion recognition system is used, deployers must inform the natural persons exposed to it about the system's operation.",
+    "citations": [
+      "ai-act-article-005.md",
+      "ai-act-article-050.md"
+    ]
+  },
+  {
+    "question": "Can the police identify people in public places with biometric systems in real time?",
+    "answerable": true,
+    "status": "answered",
+    "correct_source": true,
+    "text": "Member States may authorize the use of real-time remote biometric identification systems in publicly accessible spaces for law enforcement purposes under specific conditions. When used for certain objectives, these systems are deployed to confirm the identity of a specifically targeted individual. Use of these systems must be notified to the relevant market surveillance authority and the national data protection authority. These authorities must submit annual reports on such use to the Commission.",
+    "citations": [
+      "ai-act-article-005.md"
+    ]
+  },
+  {
+    "question": "When is an AI system considered high-risk?",
+    "answerable": true,
+    "status": "answered",
+    "correct_source": true,
+    "text": "AI systems listed in Annex III are considered high-risk. However, an AI system in Annex III is not considered high-risk if it does not pose a significant risk of harm to the health, safety, or fundamental rights of natural persons. This includes cases where the system does not materially influence the outcome of decision-making.",
+    "citations": [
+      "ai-act-article-006.md"
+    ]
+  },
+  {
+    "question": "Under which conditions is an Annex III system not high-risk?",
+    "answerable": true,
+    "status": "error",
+    "correct_source": false,
+    "text": "all models failed, last error: model call failed with HTTP 503",
+    "citations": []
+  },
+  {
+    "question": "What must a risk management system for high-risk AI do?",
+    "answerable": true,
+    "status": "answered",
+    "correct_source": true,
+    "text": "A risk management system for high-risk AI systems must be established, implemented, documented, and maintained. It functions as a continuous iterative process that is planned and run throughout the entire lifecycle of the system, requiring regular systematic review and updating. When implementing the system, providers must consider if the AI is likely to have an adverse impact on persons under the age of 18 or other vulnerable groups. Furthermore, the system must ensure the elimination or reduction of identified risks through adequate design and development, or the implementation of mitigation and control measures for risks that cannot be eliminated. Finally, the system must ensure that residual risks are judged to be acceptable.",
+    "citations": [
+      "ai-act-article-009.md"
+    ]
+  },
+  {
+    "question": "What quality rules apply to the data used to train a high-risk AI system?",
+    "answerable": true,
+    "status": "error",
+    "correct_source": false,
+    "text": "all models failed, last error: model call failed with HTTP 503",
+    "citations": []
+  },
+  {
+    "question": "Which events must high-risk systems record automatically?",
+    "answerable": true,
+    "status": "answered",
+    "correct_source": true,
+    "text": "High-risk AI systems must automatically record events over their lifetime to ensure traceability appropriate to their intended purpose. For systems referred to in point 1(a) of Annex III, logging must include the start and end date and time of each use, the reference database used for input data checks, and the input data that resulted in a match.",
+    "citations": [
+      "ai-act-article-012.md"
+    ]
+  },
+  {
+    "question": "What must the instructions for use contain so that deployers can understand the system?",
+    "answerable": true,
+    "status": "answered",
+    "correct_source": true,
+    "text": "The instructions for use must include concise, complete, correct, and clear information that is relevant, accessible, and comprehensible to deployers. They must also contain the identity and contact details of the provider and, where applicable, their authorised representative.",
+    "citations": [
+      "ai-act-article-013.md"
+    ]
+  },
+  {
+    "question": "What is human oversight supposed to achieve?",
+    "answerable": true,
+    "status": "error",
+    "correct_source": false,
+    "text": "all models failed, last error: model call failed with HTTP 503",
+    "citations": []
+  },
+  {
+    "question": "What does the law require about accuracy and robustness?",
+    "answerable": true,
+    "status": "error",
+    "correct_source": false,
+    "text": "all models failed, last error: model call failed with HTTP 503",
+    "citations": []
+  },
+  {
+    "question": "What duties do organisations have when they use a high-risk AI system?",
+    "answerable": true,
+    "status": "error",
+    "correct_source": false,
+    "text": "all models failed, last error: model call failed with HTTP 503",
+    "citations": []
+  },
+  {
+    "question": "Do people have to be told that they are talking to a chatbot?",
+    "answerable": true,
+    "status": "error",
+    "correct_source": false,
+    "text": "all models failed, last error: model call failed with HTTP 503",
+    "citations": []
+  },
+  {
+    "question": "How must deepfakes be labelled?",
+    "answerable": true,
+    "status": "error",
+    "correct_source": false,
+    "text": "all models failed, last error: model call failed with HTTP 503",
+    "citations": []
+  },
+  {
+    "question": "What must providers of general-purpose AI models document?",
+    "answerable": true,
+    "status": "error",
+    "correct_source": false,
+    "text": "all models failed, last error: model call failed with HTTP 503",
+    "citations": []
+  },
+  {
+    "question": "What is the maximum fine for using a prohibited AI practice?",
+    "answerable": true,
+    "status": "answered",
+    "correct_source": true,
+    "text": "The maximum fine for non-compliance with the prohibition of AI practices is up to EUR 35,000,000. Alternatively, if the offender is an undertaking, the fine can be up to 7% of its total worldwide annual turnover for the preceding financial year, whichever amount is higher.",
+    "citations": [
+      "ai-act-article-099.md"
+    ]
+  },
+  {
+    "question": "How are fines calculated for small companies and start-ups?",
+    "answerable": true,
+    "status": "error",
+    "correct_source": false,
+    "text": "all models failed, last error: model call failed with HTTP 503",
+    "citations": []
+  },
+  {
+    "question": "What does AI literacy mean and who has to ensure it?",
+    "answerable": true,
+    "status": "answered",
+    "correct_source": true,
+    "text": "AI literacy refers to the skills, knowledge, and understanding that enable providers, deployers, and affected persons to make informed deployments of AI systems and gain awareness of their opportunities, risks, and potential harm. Providers and deployers of AI systems are responsible for ensuring a sufficient level of AI literacy among their staff and others operating AI systems on their behalf.",
+    "citations": [
+      "ai-act-article-003.md",
+      "ai-act-article-004.md"
+    ]
+  },
+  {
+    "question": "Welche KI-Praktiken sind verboten?",
+    "answerable": true,
+    "status": "answered",
+    "correct_source": true,
+    "text": "Die EU-KI-Verordnung verbietet bestimmte KI-Praktiken.",
+    "citations": [
+      "ai-act-article-005.md"
+    ]
+  },
+  {
+    "question": "Wie hoch sind die Bußgelder bei Verstößen?",
+    "answerable": true,
+    "status": "answered",
+    "correct_source": true,
+    "text": "Bei Verstößen gegen bestimmte Bestimmungen für Betreiber oder benannte Stellen können Bußgelder von bis zu 15.000.000 EUR oder bei Unternehmen bis zu 3 % des weltweiten Jahresumsatzes des vorangegangenen Geschäftsjahres verhängt werden, je nachdem, welcher Betrag höher ist. Für die Bereitstellung falscher, unvollständiger oder irreführender Informationen an benannte Stellen oder nationale Behörden können Bußgelder von bis zu 7.500.000 EUR oder bei Unternehmen bis zu 1 % des weltweiten Jahresumsatzes des vorangegangenen Geschäftsjahres verhängt werden, je nachdem, welcher Betrag höher ist. Bei der Festlegung der Bußgelder werden Faktoren wie Art, Schwere und Dauer des Verstoßes, die Größe und der Marktanteil des Betreibers sowie mildernde oder erschwerende Umstände berücksichtigt.",
+    "citations": [
+      "ai-act-article-099.md"
+    ]
+  },
+  {
+    "question": "Muss man Nutzer darüber informieren, dass sie mit einer KI sprechen?",
+    "answerable": true,
+    "status": "answered",
+    "correct_source": true,
+    "text": "Anbieter müssen sicherstellen, dass natürliche Personen darüber informiert werden, wenn sie mit einem KI-System interagieren. Dies gilt nicht, wenn die Interaktion mit einer KI aus der Sicht einer vernünftig informierten, aufmerksamen und umsichtigen Person unter Berücksichtigung der Umstände und des Nutzungskontexts offensichtlich ist.",
+    "citations": [
+      "ai-act-article-050.md"
+    ]
+  },
+  {
+    "question": "Wann gilt ein KI-System als Hochrisiko-System?",
+    "answerable": true,
+    "status": "error",
+    "correct_source": false,
+    "text": "all models failed, last error: model call failed with HTTP 503",
+    "citations": []
+  },
+  {
+    "question": "Wer überwacht ein Hochrisiko-System im Betrieb und wie lange werden Protokolle aufbewahrt?",
+    "answerable": true,
+    "status": "error",
+    "correct_source": false,
+    "text": "all models failed, last error: model call failed with HTTP 503",
+    "citations": []
+  },
+  {
+    "question": "What is the capital of France?",
+    "answerable": false,
+    "status": "refused",
+    "correct_source": false,
+    "text": "I am not sure, so I will not guess: the documents contain nothing related to the question.",
+    "citations": []
+  },
+  {
+    "question": "How do I bake a sourdough bread?",
+    "answerable": false,
+    "status": "refused",
+    "correct_source": false,
+    "text": "I am not sure, so I will not guess: the documents contain nothing related to the question.",
+    "citations": []
+  },
+  {
+    "question": "Who won the football World Cup in 2022?",
+    "answerable": false,
+    "status": "refused",
+    "correct_source": false,
+    "text": "I am not sure, so I will not guess: the documents contain nothing related to the question.",
+    "citations": []
+  },
+  {
+    "question": "What does the GDPR say about the right to data portability?",
+    "answerable": false,
+    "status": "refused",
+    "correct_source": false,
+    "text": "I am not sure, so I will not guess: the answer could not be verified against the sources. The closest passages I found are listed as sources.",
+    "citations": [
+      "ai-act-article-010.md"
+    ]
+  },
+  {
+    "question": "How many employees does the European Commission have?",
+    "answerable": false,
+    "status": "refused",
+    "correct_source": false,
+    "text": "I am not sure, so I will not guess: the answer could not be verified against the sources. The closest passages I found are listed as sources.",
+    "citations": [
+      "ai-act-article-099.md",
+      "ai-act-article-015.md",
+      "ai-act-article-006.md",
+      "ai-act-article-050.md"
+    ]
+  },
+  {
+    "question": "Which programming language is best for beginners?",
+    "answerable": false,
+    "status": "refused",
+    "correct_source": false,
+    "text": "I am not sure, so I will not guess: the documents contain nothing related to the question.",
+    "citations": []
+  },
+  {
+    "question": "Was ist die Hauptstadt von Australien?",
+    "answerable": false,
+    "status": "refused",
+    "correct_source": false,
+    "text": "I am not sure, so I will not guess: the documents contain nothing related to the question.",
+    "citations": []
+  },
+  {
+    "question": "What is the recipe for a good espresso?",
+    "answerable": false,
+    "status": "refused",
+    "correct_source": false,
+    "text": "I am not sure, so I will not guess: the documents contain nothing related to the question.",
+    "citations": []
+  }
+]
