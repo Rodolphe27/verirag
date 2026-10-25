@@ -6,7 +6,7 @@ from numpy.typing import NDArray
 
 from tests.helpers.fake_embedder import TopicEmbedder
 from verirag.retrieval.embedding import Kind
-from verirag.retrieval.index import build_index, load_retriever
+from verirag.retrieval.index import build_index, list_sources, load_retriever
 
 TOPICS = [{"risk", "harm"}, {"data", "training"}]
 
@@ -88,3 +88,14 @@ def test_the_loaded_retriever_finds_the_right_file(docs: Path, tmp_path: Path) -
 def test_loading_a_missing_index_explains_what_to_do(tmp_path: Path) -> None:
     with pytest.raises(FileNotFoundError, match="verirag index"):
         load_retriever(tmp_path / "none.json", CountingEmbedder())
+
+
+def test_list_sources_names_the_indexed_files(docs: Path, tmp_path: Path) -> None:
+    index = tmp_path / "index.json"
+    build_index(docs, index, CountingEmbedder())
+    assert list_sources(index) == ["data.md", "risk.md"]
+
+
+def test_list_sources_of_a_missing_index_explains_what_to_do(tmp_path: Path) -> None:
+    with pytest.raises(FileNotFoundError, match="verirag index"):
+        list_sources(tmp_path / "none.json")

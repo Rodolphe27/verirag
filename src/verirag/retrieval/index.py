@@ -84,6 +84,16 @@ def load_retriever(index_path: Path, embedder: Embedder, hybrid: bool = True) ->
     return HybridRetriever(chunks, vectors, embedder, hybrid=hybrid)
 
 
+def list_sources(index_path: Path) -> list[str]:
+    """Names of the files stored in an index, sorted."""
+    if not index_path.exists():
+        raise FileNotFoundError(
+            f"no index at {index_path}; build one with `verirag index <folder>`"
+        )
+    document = json.loads(index_path.read_text(encoding="utf-8"))
+    return sorted(document["files"])
+
+
 def _read_files(index_path: Path, settings: dict[str, object]) -> dict[str, Any]:
     """Files of an existing index, or {} if there is none or its settings differ."""
     if not index_path.exists():
