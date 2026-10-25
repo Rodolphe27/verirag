@@ -26,7 +26,8 @@ class ClaimVerdict:
 
     claim: Claim
     supported: bool
-    reason: str = ""
+    reason: str = ""  # why a claim failed
+    evidence: str = ""  # the exact words from the sources that prove a supported claim
 
 
 @dataclass(frozen=True)

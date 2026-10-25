@@ -26,8 +26,9 @@ def reply(*items: dict[str, Any]) -> str:
 
 
 def check(model_reply: str, draft: Draft = DRAFT) -> list[tuple[bool, str]]:
+    """(supported, reason) for each claim; for a supported claim the evidence is shown."""
     result = Verifier(ScriptedLLM(model_reply)).verify(draft, CHUNKS)
-    return [(v.supported, v.reason) for v in result.items]
+    return [(v.supported, v.evidence if v.supported else v.reason) for v in result.items]
 
 
 def test_a_claim_with_real_evidence_is_supported() -> None:

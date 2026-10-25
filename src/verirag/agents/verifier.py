@@ -65,7 +65,7 @@ class Verifier:
                 items.append(ClaimVerdict(claim, False, raw["reason"] or "not supported"))
             else:
                 if locate_evidence(raw["evidence"], chunks) is not None:
-                    items.append(ClaimVerdict(claim, True, raw["evidence"]))
+                    items.append(ClaimVerdict(claim, True, evidence=raw["evidence"]))
                 else:
                     reason = "the quoted evidence is not in the sources"
                     items.append(ClaimVerdict(claim, False, reason))
