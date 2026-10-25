@@ -32,8 +32,12 @@ def load_chunks(path: Path, size: int = 450, overlap: int = 150) -> list[Chunk]:
     ]
 
 
-def load_folder(folder: Path, size: int = 450, overlap: int = 150) -> list[Chunk]:
-    """Chunks of every supported file in `folder` (sub-folders included), in name order."""
+def find_documents(folder: Path) -> list[Path]:
+    """Supported files in `folder` (sub-folders included), sorted by path."""
     supported = TEXT_SUFFIXES | {".pdf"}
-    files = sorted(p for p in folder.rglob("*") if p.suffix.lower() in supported)
-    return [chunk for path in files for chunk in load_chunks(path, size, overlap)]
+    return sorted(p for p in folder.rglob("*") if p.suffix.lower() in supported)
+
+
+def load_folder(folder: Path, size: int = 450, overlap: int = 150) -> list[Chunk]:
+    """Chunks of every supported file in `folder`, in path order."""
+    return [chunk for path in find_documents(folder) for chunk in load_chunks(path, size, overlap)]
