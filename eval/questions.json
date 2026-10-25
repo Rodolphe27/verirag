@@ -1,0 +1,42 @@
+{
+  "description": "Questions about the sample corpus (docs/sample). 'sources' lists every file that correctly answers the question; finding any one of them counts as a hit. 'unanswerable' questions have no answer in the corpus and must be refused.",
+  "answerable": [
+    {"question": "What counts as an AI system according to the regulation?", "sources": ["ai-act-article-003.md"]},
+    {"question": "How does the law define a provider of an AI system?", "sources": ["ai-act-article-003.md"]},
+    {"question": "What is a deployer?", "sources": ["ai-act-article-003.md"]},
+    {"question": "Which AI practices are banned?", "sources": ["ai-act-article-005.md"]},
+    {"question": "Is it allowed to rank people by their social behaviour and treat them worse because of it?", "sources": ["ai-act-article-005.md"]},
+    {"question": "May an employer use AI to detect the emotions of workers?", "sources": ["ai-act-article-005.md"]},
+    {"question": "Can the police identify people in public places with biometric systems in real time?", "sources": ["ai-act-article-005.md"]},
+    {"question": "When is an AI system considered high-risk?", "sources": ["ai-act-article-006.md"]},
+    {"question": "Under which conditions is an Annex III system not high-risk?", "sources": ["ai-act-article-006.md"]},
+    {"question": "What must a risk management system for high-risk AI do?", "sources": ["ai-act-article-009.md"]},
+    {"question": "What quality rules apply to the data used to train a high-risk AI system?", "sources": ["ai-act-article-010.md"]},
+    {"question": "Which events must high-risk systems record automatically?", "sources": ["ai-act-article-012.md"]},
+    {"question": "What must the instructions for use contain so that deployers can understand the system?", "sources": ["ai-act-article-013.md"]},
+    {"question": "What is human oversight supposed to achieve?", "sources": ["ai-act-article-014.md"]},
+    {"question": "What does the law require about accuracy and robustness?", "sources": ["ai-act-article-015.md"]},
+    {"question": "What duties do organisations have when they use a high-risk AI system?", "sources": ["ai-act-article-026.md"]},
+    {"question": "Do people have to be told that they are talking to a chatbot?", "sources": ["ai-act-article-050.md"]},
+    {"question": "How must deepfakes be labelled?", "sources": ["ai-act-article-050.md"]},
+    {"question": "What must providers of general-purpose AI models document?", "sources": ["ai-act-article-053.md"]},
+    {"question": "What is the maximum fine for using a prohibited AI practice?", "sources": ["ai-act-article-099.md"]},
+    {"question": "How are fines calculated for small companies and start-ups?", "sources": ["ai-act-article-099.md"]},
+    {"question": "What does AI literacy mean and who has to ensure it?", "sources": ["ai-act-article-003.md", "ai-act-article-004.md"]},
+    {"question": "Welche KI-Praktiken sind verboten?", "sources": ["ai-act-article-005.md"]},
+    {"question": "Wie hoch sind die Bußgelder bei Verstößen?", "sources": ["ai-act-article-099.md"]},
+    {"question": "Muss man Nutzer darüber informieren, dass sie mit einer KI sprechen?", "sources": ["ai-act-article-050.md"]},
+    {"question": "Wann gilt ein KI-System als Hochrisiko-System?", "sources": ["ai-act-article-006.md"]},
+    {"question": "Wer überwacht ein Hochrisiko-System im Betrieb und wie lange werden Protokolle aufbewahrt?", "sources": ["ai-act-article-026.md", "ai-act-article-012.md"]}
+  ],
+  "unanswerable": [
+    {"question": "What is the capital of France?"},
+    {"question": "How do I bake a sourdough bread?"},
+    {"question": "Who won the football World Cup in 2022?"},
+    {"question": "What does the GDPR say about the right to data portability?"},
+    {"question": "How many employees does the European Commission have?"},
+    {"question": "Which programming language is best for beginners?"},
+    {"question": "Was ist die Hauptstadt von Australien?"},
+    {"question": "What is the recipe for a good espresso?"}
+  ]
+}
