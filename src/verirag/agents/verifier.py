@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import re
 from collections.abc import Sequence
 from typing import Any
 
@@ -93,18 +94,41 @@ def _read_verdicts(reply: str) -> dict[int, dict[str, Any]]:
     return result
 
 
+MIN_QUOTE_LENGTH = 15  # a shorter quote could match almost any chunk by chance
+_ELLIPSIS = re.compile(r"\[\s*(?:\.\.\.|…)\s*\]|\.\.\.|…")
+_TYPOGRAPHY = str.maketrans(
+    {"\u2018": "'", "\u2019": "'", "\u201c": '"', "\u201d": '"', "\u2013": "-", "\u2014": "-"}
+)
+
+
 def locate_evidence(quote: str, chunks: Sequence[Chunk]) -> Chunk | None:
     """The first chunk that contains `quote`, or None.
 
-    The whole quote must sit inside ONE chunk. Line breaks and capitals are
-    ignored. An empty quote matches nothing.
+    The whole quote must sit inside ONE chunk. Models quote loosely in two
+    harmless ways, and both are accepted: they write "..." for words they
+    skipped (each part must still appear, in the same order), and they use
+    curly quotes or long dashes where the source has plain ones. Line breaks
+    and capitals are ignored. A quote that is empty or shorter than
+    MIN_QUOTE_LENGTH characters matches nothing.
     """
-    wanted = _normalise(quote)
-    if not wanted:
+    fragments = [f for f in (_normalise(part) for part in _ELLIPSIS.split(quote)) if f]
+    if sum(len(f) for f in fragments) < MIN_QUOTE_LENGTH:
         return None
-    return next((chunk for chunk in chunks if wanted in _normalise(chunk.text)), None)
+    return next(
+        (chunk for chunk in chunks if _contains_in_order(_normalise(chunk.text), fragments)), None
+    )
+
+
+def _contains_in_order(text: str, fragments: list[str]) -> bool:
+    position = 0
+    for fragment in fragments:
+        found = text.find(fragment, position)
+        if found == -1:
+            return False
+        position = found + len(fragment)
+    return True
 
 
 def _normalise(text: str) -> str:
-    """Lowercase and single spaces, so a quote matches despite line breaks and capitals."""
-    return " ".join(text.lower().split())
+    """Lowercase, plain quotes and dashes, and single spaces."""
+    return " ".join(text.translate(_TYPOGRAPHY).lower().split())

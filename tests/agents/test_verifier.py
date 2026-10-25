@@ -109,3 +109,26 @@ def test_locate_evidence_finds_nothing_for_empty_or_unknown_quotes() -> None:
 
 def test_a_quote_spread_over_two_chunks_is_not_evidence() -> None:
     assert locate_evidence("or 7 % of turnover. Providers must keep logs", CHUNKS) is None
+
+
+def test_an_ellipsis_may_replace_skipped_words() -> None:
+    assert locate_evidence("Fines can reach ... or 7 % of turnover", CHUNKS) is CHUNKS[0]
+    assert locate_evidence("Fines can reach [...] or 7 % of turnover", CHUNKS) is CHUNKS[0]
+    assert locate_evidence("Fines can reach \u2026 or 7 % of turnover", CHUNKS) is CHUNKS[0]
+
+
+def test_the_parts_around_an_ellipsis_must_keep_their_order() -> None:
+    assert locate_evidence("or 7 % of turnover ... Fines can reach", CHUNKS) is None
+
+
+def test_every_part_around_an_ellipsis_must_really_exist() -> None:
+    assert locate_evidence("Fines can reach ... and then some invented words", CHUNKS) is None
+
+
+def test_curly_quotes_and_long_dashes_match_plain_ones() -> None:
+    chunks = [Chunk('The provider\'s duty - keep "logs" safe for long.', "a.md")]
+    assert locate_evidence("The provider\u2019s duty \u2014 keep \u201clogs\u201d safe", chunks)
+
+
+def test_a_very_short_quote_proves_nothing() -> None:
+    assert locate_evidence("keep logs", CHUNKS) is None
