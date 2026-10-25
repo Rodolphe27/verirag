@@ -2,10 +2,12 @@
   {
     "question": "What counts as an AI system according to the regulation?",
     "answerable": true,
-    "status": "error",
-    "correct_source": false,
-    "text": "all models failed, last error: model call failed with HTTP 503",
-    "citations": []
+    "status": "answered",
+    "correct_source": true,
+    "text": "A general-purpose AI system is defined as an AI system based on a general-purpose AI model that can serve a variety of purposes, including direct use or integration into other AI systems.",
+    "citations": [
+      "ai-act-article-003.md"
+    ]
   },
   {
     "question": "How does the law define a provider of an AI system?",
@@ -20,10 +22,12 @@
   {
     "question": "What is a deployer?",
     "answerable": true,
-    "status": "error",
-    "correct_source": false,
-    "text": "all models failed, last error: model call failed with HTTP 503",
-    "citations": []
+    "status": "answered",
+    "correct_source": true,
+    "text": "A deployer is a natural or legal person, public authority, agency, or other body that uses an AI system under its authority. This definition excludes the use of an AI system during a personal non-professional activity.",
+    "citations": [
+      "ai-act-article-003.md"
+    ]
   },
   {
     "question": "Which AI practices are banned?",
@@ -38,10 +42,12 @@
   {
     "question": "Is it allowed to rank people by their social behaviour and treat them worse because of it?",
     "answerable": true,
-    "status": "error",
+    "status": "refused",
     "correct_source": false,
-    "text": "all models failed, last error: model call failed with HTTP 503",
-    "citations": []
+    "text": "I am not sure, so I will not guess: the answer could not be verified against the sources. The closest passages I found are listed as sources.",
+    "citations": [
+      "ai-act-article-005.md"
+    ]
   },
   {
     "question": "May an employer use AI to detect the emotions of workers?",
@@ -77,10 +83,12 @@
   {
     "question": "Under which conditions is an Annex III system not high-risk?",
     "answerable": true,
-    "status": "error",
-    "correct_source": false,
-    "text": "all models failed, last error: model call failed with HTTP 503",
-    "citations": []
+    "status": "answered",
+    "correct_source": true,
+    "text": "An AI system listed in Annex III is not considered high-risk if it does not pose a significant risk of harm to the health, safety, or fundamental rights of natural persons. This includes cases where the system does not materially influence the outcome of decision-making. Providers who determine their system is not high-risk must document this assessment before placing the system on the market or putting it into service. These providers are subject to registration obligations and must provide their assessment documentation to national competent authorities upon request. However, an AI system that performs profiling of natural persons is always considered high-risk, regardless of these conditions.",
+    "citations": [
+      "ai-act-article-006.md"
+    ]
   },
   {
     "question": "What must a risk management system for high-risk AI do?",
@@ -95,10 +103,12 @@
   {
     "question": "What quality rules apply to the data used to train a high-risk AI system?",
     "answerable": true,
-    "status": "error",
-    "correct_source": false,
-    "text": "all models failed, last error: model call failed with HTTP 503",
-    "citations": []
+    "status": "answered",
+    "correct_source": true,
+    "text": "High-risk AI systems that use training techniques must be developed using training, validation, and testing data sets that meet specific quality criteria. These data sets must be subject to data governance and management practices appropriate for the system's intended purpose. These practices must address design choices, data collection processes, the origin of data, and the original purpose of personal data collection. Furthermore, the data sets must be relevant, sufficiently representative, complete, and as free of errors as possible. They must also possess appropriate statistical properties, including regarding the persons or groups of persons in relation to whom the high-risk AI system is intended to be used.",
+    "citations": [
+      "ai-act-article-010.md"
+    ]
   },
   {
     "question": "Which events must high-risk systems record automatically?",
@@ -123,50 +133,65 @@
   {
     "question": "What is human oversight supposed to achieve?",
     "answerable": true,
-    "status": "error",
+    "status": "refused",
     "correct_source": false,
-    "text": "all models failed, last error: model call failed with HTTP 503",
-    "citations": []
+    "text": "I am not sure, so I will not guess: the answer could not be verified against the sources. The closest passages I found are listed as sources.",
+    "citations": [
+      "ai-act-article-026.md",
+      "ai-act-article-014.md"
+    ]
   },
   {
     "question": "What does the law require about accuracy and robustness?",
     "answerable": true,
-    "status": "error",
-    "correct_source": false,
-    "text": "all models failed, last error: model call failed with HTTP 503",
-    "citations": []
+    "status": "answered",
+    "correct_source": true,
+    "text": "High-risk AI systems must be designed and developed to achieve appropriate levels of accuracy, robustness, and cybersecurity. These systems must perform consistently in these areas throughout their lifecycle. High-risk AI systems must be as resilient as possible regarding errors, faults, or inconsistencies. The levels of accuracy and relevant metrics must be declared in the accompanying instructions of use. The Commission will encourage the development of benchmarks and measurement methodologies for these performance metrics.",
+    "citations": [
+      "ai-act-article-015.md"
+    ]
   },
   {
     "question": "What duties do organisations have when they use a high-risk AI system?",
     "answerable": true,
-    "status": "error",
-    "correct_source": false,
-    "text": "all models failed, last error: model call failed with HTTP 503",
-    "citations": []
+    "status": "answered",
+    "correct_source": true,
+    "text": "Organizations deploying high-risk AI systems must implement technical and organizational measures to ensure the systems are used according to the provided instructions. If a deployer believes that using the system as instructed could result in a risk to health, safety, or fundamental rights, they must inform the provider or distributor and the relevant market surveillance authority without undue delay. Additionally, they must suspend the use of the system in such cases.",
+    "citations": [
+      "ai-act-article-026.md"
+    ]
   },
   {
     "question": "Do people have to be told that they are talking to a chatbot?",
     "answerable": true,
-    "status": "error",
-    "correct_source": false,
-    "text": "all models failed, last error: model call failed with HTTP 503",
-    "citations": []
+    "status": "answered",
+    "correct_source": true,
+    "text": "Providers must ensure that natural persons are informed when they are interacting with an AI system. This requirement does not apply if it is obvious to a reasonably well-informed, observant, and circumspect person, considering the context and circumstances of use.",
+    "citations": [
+      "ai-act-article-050.md"
+    ]
   },
   {
     "question": "How must deepfakes be labelled?",
     "answerable": true,
-    "status": "error",
+    "status": "refused",
     "correct_source": false,
-    "text": "all models failed, last error: model call failed with HTTP 503",
-    "citations": []
+    "text": "I am not sure, so I will not guess: the answer could not be verified against the sources. The closest passages I found are listed as sources.",
+    "citations": [
+      "ai-act-article-010.md",
+      "ai-act-article-005.md",
+      "ai-act-article-003.md"
+    ]
   },
   {
     "question": "What must providers of general-purpose AI models document?",
     "answerable": true,
-    "status": "error",
-    "correct_source": false,
-    "text": "all models failed, last error: model call failed with HTTP 503",
-    "citations": []
+    "status": "answered",
+    "correct_source": true,
+    "text": "Providers of general-purpose AI models must draw up, keep up-to-date, and make available information and documentation to providers of AI systems who intend to integrate the model into their systems.",
+    "citations": [
+      "ai-act-article-053.md"
+    ]
   },
   {
     "question": "What is the maximum fine for using a prohibited AI practice?",
@@ -181,10 +206,12 @@
   {
     "question": "How are fines calculated for small companies and start-ups?",
     "answerable": true,
-    "status": "error",
-    "correct_source": false,
-    "text": "all models failed, last error: model call failed with HTTP 503",
-    "citations": []
+    "status": "answered",
+    "correct_source": true,
+    "text": "For SMEs and start-ups, fines are calculated based on the percentages or amounts specified in the regulation, whichever is lower. Additionally, the determination of penalties must consider the interests and economic viability of these companies.",
+    "citations": [
+      "ai-act-article-099.md"
+    ]
   },
   {
     "question": "What does AI literacy mean and who has to ensure it?",
@@ -230,18 +257,22 @@
   {
     "question": "Wann gilt ein KI-System als Hochrisiko-System?",
     "answerable": true,
-    "status": "error",
-    "correct_source": false,
-    "text": "all models failed, last error: model call failed with HTTP 503",
-    "citations": []
+    "status": "answered",
+    "correct_source": true,
+    "text": "KI-Systeme, die in Anhang III aufgeführt sind, gelten als Hochrisiko-Systeme. Dies gilt jedoch nicht, wenn sie kein signifikantes Risiko für die Gesundheit, Sicherheit oder die Grundrechte natürlicher Personen darstellen, etwa weil sie das Ergebnis von Entscheidungsfindungen nicht wesentlich beeinflussen.",
+    "citations": [
+      "ai-act-article-006.md"
+    ]
   },
   {
     "question": "Wer überwacht ein Hochrisiko-System im Betrieb und wie lange werden Protokolle aufbewahrt?",
     "answerable": true,
-    "status": "error",
-    "correct_source": false,
-    "text": "all models failed, last error: model call failed with HTTP 503",
-    "citations": []
+    "status": "answered",
+    "correct_source": true,
+    "text": "Die Quellen enthalten keine explizite Information darüber, wer ein Hochrisiko-System im laufenden Betrieb überwacht, außer dass Anwender bei Risiken die Marktüberwachungsbehörde informieren müssen. Protokolle müssen für einen Zeitraum von mindestens sechs Monaten aufbewahrt werden.",
+    "citations": [
+      "ai-act-article-026.md"
+    ]
   },
   {
     "question": "What is the capital of France?",
