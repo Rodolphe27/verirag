@@ -133,3 +133,21 @@ def test_serve_verified_needs_an_api_key(index: Path) -> None:
     result = run("--index", str(index), "serve", "--verified")
     assert result.code == 1
     assert "GEMINI_API_KEY" in result.err
+
+
+def test_evaluate_prints_one_row_per_search_mode(index: Path, tmp_path: Path) -> None:
+    questions = tmp_path / "q.json"
+    questions.write_text(
+        json.dumps(
+            {
+                "answerable": [{"question": "How high are fines?", "sources": ["article-99.md"]}],
+                "unanswerable": [{"question": "What is the weather?"}],
+            }
+        ),
+        encoding="utf-8",
+    )
+    result = run("--index", str(index), "evaluate", "--questions", str(questions))
+    assert result.code == 0
+    rows = [line.split("|")[1].strip() for line in result.out.splitlines()[2:5]]
+    assert rows == ["dense", "keyword", "hybrid"]
+    assert "1 answerable and 1 unanswerable" in result.out

@@ -1,4 +1,5 @@
-"""The command line: `verirag index <folder>`, `verirag ask "<question>"`, `verirag serve`.
+"""The command line: `verirag index <folder>`, `verirag ask "<question>"`, `verirag serve`,
+`verirag evaluate`.
 
 This module is the composition root: the one place that creates the real
 objects (embedder, model, tracers) and connects them. Everything else only
@@ -22,6 +23,8 @@ from verirag.agents.router import DEFAULT_MIN_SCORE
 from verirag.assistant import Assistant
 from verirag.config import load_env_file
 from verirag.domain.answer import Answer, AnswerStatus
+from verirag.evaluation.cases import load_cases
+from verirag.evaluation.retrieval import evaluate_retrieval, format_table
 from verirag.llm.factory import create_llm
 from verirag.mcp_server import create_server
 from verirag.ports import LLM, LLMError, Tracer
@@ -50,6 +53,8 @@ def main(
     try:
         if args.command == "index":
             return _index(args, index_path, embedder, out)
+        if args.command == "evaluate":
+            return _evaluate(args, index_path, embedder, out)
         if args.command == "serve":
             return _serve(args, index_path, embedder, llm, environ)
         return _ask(args, index_path, embedder, llm, environ, out, err)
@@ -66,6 +71,24 @@ def _index(args: argparse.Namespace, index_path: Path, embedder: Embedder, out: 
     print(
         f"Index saved to {index_path}: {len(report.embedded)} file(s) embedded, "
         f"{len(report.reused)} reused, {len(report.removed)} removed.",
+        file=out,
+    )
+    return 0
+
+
+def _evaluate(args: argparse.Namespace, index_path: Path, embedder: Embedder, out: TextIO) -> int:
+    """Measure the search on a question file, for each search mode."""
+    cases = load_cases(Path(args.questions))
+    reports = {
+        mode: evaluate_retrieval(
+            load_retriever(index_path, embedder, mode), cases, args.k, args.min_score
+        )
+        for mode in ("dense", "keyword", "hybrid")
+    }
+    print(format_table(reports), file=out)
+    print(
+        f"\n{len(cases.answerable)} answerable and {len(cases.unanswerable)} unanswerable "
+        f"questions, score threshold {args.min_score}.",
         file=out,
     )
     return 0
@@ -135,6 +158,11 @@ def _parser() -> argparse.ArgumentParser:
 
     index = commands.add_parser("index", help="read the documents of a folder into the index")
     index.add_argument("folder", help="folder with .md, .txt and .pdf files")
+
+    evaluate = commands.add_parser("evaluate", help="measure how well the search finds sources")
+    evaluate.add_argument("--questions", default="eval/questions.json", help="question file")
+    evaluate.add_argument("--k", type=int, default=4, help="chunks retrieved per question")
+    evaluate.add_argument("--min-score", type=float, default=DEFAULT_MIN_SCORE)
 
     serve = commands.add_parser("serve", help="run an MCP server for AI applications")
     serve.add_argument(

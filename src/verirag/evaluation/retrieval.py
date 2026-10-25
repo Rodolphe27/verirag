@@ -59,3 +59,18 @@ def evaluate_retrieval(
 
 def _rate(count: float, total: int) -> float:
     return count / total if total else 0.0
+
+
+def format_table(reports: dict[str, RetrievalReport]) -> str:
+    """A Markdown table, one row per search mode, ready to paste into the docs."""
+    first = next(iter(reports.values()))
+    lines = [
+        f"| Search mode | Hit rate@{first.k} | MRR | False refusals | Correct refusals |",
+        "|---|---|---|---|---|",
+    ]
+    for mode, r in reports.items():
+        lines.append(
+            f"| {mode} | {r.hit_rate:.0%} | {r.mrr:.2f} | {r.false_refusals:.0%} "
+            f"| {r.correct_refusals:.0%} |"
+        )
+    return "\n".join(lines)

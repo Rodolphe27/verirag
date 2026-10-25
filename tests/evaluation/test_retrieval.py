@@ -4,7 +4,7 @@ import pytest
 
 from verirag.domain.chunk import Chunk
 from verirag.evaluation.cases import Case, CaseSet, load_cases
-from verirag.evaluation.retrieval import evaluate_retrieval
+from verirag.evaluation.retrieval import RetrievalReport, evaluate_retrieval, format_table
 
 
 class Scripted:
@@ -84,3 +84,13 @@ def test_an_answerable_question_without_a_source_is_rejected(tmp_path: Path) -> 
     file.write_text('{"answerable": [{"question": "q", "sources": []}], "unanswerable": []}')
     with pytest.raises(ValueError, match="at least one source"):
         load_cases(file)
+
+
+def test_the_table_has_a_header_and_one_row_per_mode() -> None:
+    report = RetrievalReport(
+        k=4, min_score=0.3, hit_rate=0.9, mrr=0.75, false_refusals=0.0, correct_refusals=1.0
+    )
+    table = format_table({"dense": report, "hybrid": report}).splitlines()
+    assert table[0].startswith("| Search mode | Hit rate@4")
+    assert table[2] == "| dense | 90% | 0.75 | 0% | 100% |"
+    assert len(table) == 4
