@@ -178,7 +178,21 @@ answer, 8 without). Full method, limits and per-question results: [docs/evaluati
 | keywords only | 74% | 0.57 |
 | **hybrid (default)** | **96%** | **0.87** |
 
-{{E2E}}
+**Whole system: does it answer when it should and refuse when it should?** (Gemini, 2026-10-25)
+
+| Measure | Result |
+|---|---|
+| Answerable questions: answered, citing a correct article | 24/27 (89%) |
+| Answerable questions: answered, citing another article | 0/27 |
+| Answerable questions: refused (false refusals) | 3/27 (11%) |
+| Off-topic questions: refused | 8/8 (100%) |
+| Off-topic questions: answered anyway | 0/8 |
+
+No wrong answer was released, and the system errs towards refusing: the three false refusals are one
+search miss and two claims the verifier would not accept. The off-topic questions that look
+close to the documents (GDPR, European Commission staff) pass the search score gate and are stopped
+by the verifier layer. The run needed two passes because the free model tier was overloaded; details
+in [docs/evaluation.md](docs/evaluation.md).
 
 ## Project structure
 
