@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import re
+
 import numpy as np
 from numpy.typing import NDArray
 
@@ -22,6 +24,6 @@ class TopicEmbedder:
     def embed(self, texts: list[str], kind: Kind = "passage") -> NDArray[np.float32]:
         rows = []
         for text in texts:
-            words = set(text.lower().replace(".", "").split())
+            words = set(re.findall(r"\w+", text.lower()))
             rows.append([len(words & topic) for topic in self._topics])
         return normalise(np.array(rows, dtype=np.float32))
