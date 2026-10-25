@@ -1,4 +1,4 @@
-"""An MCP server that exposes VeriRAG to any MCP client (Claude Desktop, an IDE, an agent).
+"""An MCP server that exposes VeriRAG to any MCP client (a desktop AI app, an IDE, an agent).
 
 MCP, the Model Context Protocol, is the standard way for an AI application to
 discover and call tools. This module is an adapter: it holds no search or
