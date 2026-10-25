@@ -2,7 +2,7 @@ import json
 from typing import Any
 
 from tests.helpers.fake_llm import ScriptedLLM
-from verirag.agents.verifier import Verifier
+from verirag.agents.verifier import Verifier, locate_evidence
 from verirag.domain.answer import Draft
 from verirag.domain.chunk import Chunk
 from verirag.domain.verdict import Claim
@@ -95,3 +95,16 @@ def test_the_prompt_lists_all_sources_and_numbered_claims() -> None:
     prompt = llm.prompts[0]
     assert "[2] Providers must keep logs." in prompt
     assert "2. Logs are kept for ten years." in prompt
+
+
+def test_locate_evidence_returns_the_chunk_that_holds_the_quote() -> None:
+    assert locate_evidence("PROVIDERS MUST keep logs", CHUNKS) is CHUNKS[1]
+
+
+def test_locate_evidence_finds_nothing_for_empty_or_unknown_quotes() -> None:
+    assert locate_evidence("", CHUNKS) is None
+    assert locate_evidence("something else", CHUNKS) is None
+
+
+def test_a_quote_spread_over_two_chunks_is_not_evidence() -> None:
+    assert locate_evidence("or 7 % of turnover. Providers must keep logs", CHUNKS) is None

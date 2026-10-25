@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections.abc import Sequence
 from typing import Any
 
 from verirag.agents.output import BadModelOutput, extract_json
@@ -33,8 +34,8 @@ class Verifier:
     """Checks every claim of a draft against the sources.
 
     The rule of the whole class is "doubt means not supported". A claim passes
-    only if the model says so AND the evidence it quotes really appears in the
-    sources. Anything missing, malformed or unreadable counts as a failure.
+    only if the model says so AND the evidence it quotes really appears in one
+    of the sources. Anything missing, malformed or unreadable counts as a failure.
     """
 
     def __init__(self, llm: LLM) -> None:
@@ -55,7 +56,6 @@ class Verifier:
         else:
             fallback = "the verifier gave no verdict for this claim"
 
-        corpus = _normalise(" ".join(chunk.text for chunk in chunks))
         items = []
         for number, claim in enumerate(draft.claims, 1):
             raw = by_number.get(number)
@@ -64,8 +64,7 @@ class Verifier:
             elif raw["supported"] is not True:
                 items.append(ClaimVerdict(claim, False, raw["reason"] or "not supported"))
             else:
-                quote = _normalise(raw["evidence"])
-                if quote and quote in corpus:
+                if locate_evidence(raw["evidence"], chunks) is not None:
                     items.append(ClaimVerdict(claim, True, raw["evidence"]))
                 else:
                     reason = "the quoted evidence is not in the sources"
@@ -92,6 +91,18 @@ def _read_verdicts(reply: str) -> dict[int, dict[str, Any]]:
         except (KeyError, TypeError, ValueError):
             continue  # an unreadable entry is ignored; its claim then has no verdict
     return result
+
+
+def locate_evidence(quote: str, chunks: Sequence[Chunk]) -> Chunk | None:
+    """The first chunk that contains `quote`, or None.
+
+    The whole quote must sit inside ONE chunk. Line breaks and capitals are
+    ignored. An empty quote matches nothing.
+    """
+    wanted = _normalise(quote)
+    if not wanted:
+        return None
+    return next((chunk for chunk in chunks if wanted in _normalise(chunk.text)), None)
 
 
 def _normalise(text: str) -> str:
