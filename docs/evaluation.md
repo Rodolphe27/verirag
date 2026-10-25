@@ -56,12 +56,62 @@ What the numbers say:
 
 ## 2. End to end: answers and refusals
 
-Not measured yet. This section is filled in when the end-to-end run exists.
+The whole system (search, writer, verifier, refusal) on the same 35 questions, with Gemini
+(`gemini-3.5-flash`, falling back to `gemini-3.1-flash-lite`). Run date: 2026-10-25.
+
+```bash
+verirag evaluate --end-to-end --output eval/results/2026-10-25-gemini.json
+verirag evaluate --end-to-end --resume eval/results/2026-10-25-gemini.json \
+                 --output eval/results/2026-10-25-gemini.json     # second pass
+```
+
+| Measure | Result |
+|---|---|
+| Answerable: answered, cites a correct article | 24/27 (89%) |
+| Answerable: answered, cites another article | 0/27 (0%) |
+| Answerable: refused | 3/27 (11%) |
+| Unanswerable: refused | 8/8 (100%) |
+| Unanswerable: answered anyway | 0/8 (0%) |
+| Runs that failed with a model error (left out above) | 0 |
+
+Every answer, with its status and citations, is saved in
+[`eval/results/2026-10-25-gemini.json`](../eval/results/2026-10-25-gemini.json).
+
+**The run was done in two passes.** The free Gemini tier answered "model overloaded" (HTTP 503)
+for 14 of the 27 answerable questions in the first pass (29 minutes). Those runs say nothing about
+quality, so they were not counted as refusals. The second pass (`--resume`) kept the 13 finished
+results unchanged and asked only the 14 failed questions again; all finished.
+
+What the numbers say:
+
+1. **No wrong answer was released.** None of the 8 off-topic questions was answered, and none of
+   the answered questions cited an unrelated article.
+2. **The second layer works as designed.** The two off-topic questions that the score gate let
+   through (GDPR, European Commission staff; see section 1) were stopped by the writer and the
+   verifier: the answer "could not be verified against the sources".
+3. **The system errs towards refusing.** Three real questions were refused:
+   - *How must deepfakes be labelled?* The search did not return Article 50 in its top 4. This is
+     the one retrieval miss of section 1. With no supporting text the system said "I am not sure"
+     and did not invent an answer. This is the intended behaviour, and it also shows that search
+     quality limits what the system can answer.
+   - *Is it allowed to rank people by their social behaviour...?* and *What is human oversight
+     supposed to achieve?* were refused after the retries because the verifier did not accept the
+     quoted proof. The articles do contain the answers, so these are **false refusals** caused by
+     strictness. It is the price of the rule "doubt means not supported" (ADR 2 and ADR 5).
+4. **German questions work.** The three German questions that finished were answered from the
+   English articles, in German.
+
+What this evaluation does **not** show: whether the wording of each answer is fully correct. The
+code guarantees that each claim has a quote that exists in a retrieved passage; it does not grade
+the final text. The author read a sample of the answers against the articles and found them
+consistent (for example the fine of up to EUR 35 000 000 or 7 % of turnover for prohibited
+practices), but this was a sample read, not a full review.
 
 ## Limits
 
 - One corpus (EU legal text), 35 questions written by the author, who also chose the expected
-  articles. A second person labelling the questions would be a better test.
+  articles. One model provider was used live (Gemini); the Anthropic adapter is tested with mocked
+  HTTP only. A second person labelling the questions would be a better test.
 - The hit rate uses files, not exact passages: an article counts as correct if it is the right
   article, even when the best passage inside it is another one.
 - Embedding and keyword settings were not tuned on these questions; the only value inspected
