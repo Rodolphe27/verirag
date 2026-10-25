@@ -24,3 +24,18 @@ jobs:
         run: lint-imports
       - name: Tests (pytest)
         run: pytest -q
+
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build the image
+        run: docker build -t verirag .
+      - name: Smoke test, no real key needed
+        # An off-topic question is refused by the search score gate before any model
+        # call, so a dummy key is enough. Exit code 2 means "refused", which is the
+        # expected result.
+        run: |
+          set +e
+          docker run --rm -e GEMINI_API_KEY=dummy verirag ask "What is the capital of France?"
+          test $? -eq 2
