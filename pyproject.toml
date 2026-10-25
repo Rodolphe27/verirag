@@ -19,6 +19,9 @@ dependencies = [
     "pypdf>=4",
 ]
 
+[project.scripts]
+verirag = "verirag.cli:main"
+
 [project.optional-dependencies]
 dev = [
     "pytest>=8",
