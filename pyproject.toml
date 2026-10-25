@@ -44,6 +44,9 @@ src = ["src", "tests"]
 # E/F: basic errors, I: import order, UP: modern syntax, B: likely bugs, SIM: simplifications
 select = ["E", "F", "I", "UP", "B", "SIM"]
 
+[tool.ruff.lint.isort]
+known-first-party = ["verirag", "tests"]
+
 [tool.mypy]
 python_version = "3.11"
 strict = true
