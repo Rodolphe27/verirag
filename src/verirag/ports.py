@@ -14,10 +14,16 @@ from typing import Protocol
 from verirag.domain.chunk import Chunk
 
 
+class LLMError(RuntimeError):
+    """The model could not give an answer (network, quota, bad reply, missing key)."""
+
+
 class LLM(Protocol):
     """A language model: text in, text out."""
 
-    def complete(self, prompt: str) -> str: ...
+    def complete(self, prompt: str) -> str:
+        """Raises LLMError when no answer can be obtained."""
+        ...
 
 
 class Retriever(Protocol):
