@@ -1,4 +1,4 @@
-"""The command line: `verirag index <folder>` and `verirag ask "<question>"`.
+"""The command line: `verirag index <folder>`, `verirag ask "<question>"`, `verirag serve`.
 
 This module is the composition root: the one place that creates the real
 objects (embedder, model, tracers) and connects them. Everything else only
@@ -23,9 +23,10 @@ from verirag.assistant import Assistant
 from verirag.config import load_env_file
 from verirag.domain.answer import Answer, AnswerStatus
 from verirag.llm.factory import create_llm
+from verirag.mcp_server import create_server
 from verirag.ports import LLM, LLMError, Tracer
 from verirag.retrieval.embedding import DEFAULT_MODEL, Embedder, FastEmbedder
-from verirag.retrieval.index import build_index, load_retriever
+from verirag.retrieval.index import build_index, list_sources, load_retriever
 from verirag.tracing import CompositeTracer, JsonlTracer, MemoryTracer
 
 DEFAULT_INDEX = ".verirag/index.json"
@@ -49,6 +50,8 @@ def main(
     try:
         if args.command == "index":
             return _index(args, index_path, embedder, out)
+        if args.command == "serve":
+            return _serve(args, index_path, embedder, llm, environ)
         return _ask(args, index_path, embedder, llm, environ, out, err)
     except (LLMError, FileNotFoundError, NotADirectoryError) as error:
         print(f"error: {error}", file=err)
@@ -65,6 +68,23 @@ def _index(args: argparse.Namespace, index_path: Path, embedder: Embedder, out: 
         f"{len(report.reused)} reused, {len(report.removed)} removed.",
         file=out,
     )
+    return 0
+
+
+def _serve(
+    args: argparse.Namespace,
+    index_path: Path,
+    embedder: Embedder,
+    llm: LLM | None,
+    environ: MutableMapping[str, str],
+) -> int:
+    """Run the MCP server on standard input/output. Nothing may be printed here:
+    stdout carries the protocol messages."""
+    retriever = load_retriever(index_path, embedder)
+    assistant = None
+    if args.verified:
+        assistant = Assistant(retriever, llm or create_llm(environ), MemoryTracer())
+    create_server(retriever, list_sources(index_path), assistant).run("stdio")
     return 0
 
 
@@ -115,6 +135,13 @@ def _parser() -> argparse.ArgumentParser:
 
     index = commands.add_parser("index", help="read the documents of a folder into the index")
     index.add_argument("folder", help="folder with .md, .txt and .pdf files")
+
+    serve = commands.add_parser("serve", help="run an MCP server for AI applications")
+    serve.add_argument(
+        "--verified",
+        action="store_true",
+        help="also offer the ask_verified tool (needs a model and its API key)",
+    )
 
     ask = commands.add_parser("ask", help="ask a question")
     ask.add_argument("question")

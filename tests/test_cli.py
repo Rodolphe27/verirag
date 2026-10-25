@@ -3,6 +3,7 @@ import json
 from pathlib import Path
 
 import pytest
+from mcp.server.mcpserver import MCPServer
 
 from tests.helpers.fake_embedder import TopicEmbedder
 from tests.helpers.fake_llm import ScriptedLLM
@@ -109,3 +110,26 @@ def test_the_index_location_can_come_from_the_environment(index: Path) -> None:
     llm = ScriptedLLM(json.dumps(DRAFT), json.dumps(VERDICT))
     result = run("ask", "How high are fines?", llm=llm, env={"VERIRAG_INDEX": str(index)})
     assert result.code == 0
+
+
+def test_serve_starts_the_mcp_server_on_stdio(index: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    started: list[str] = []
+    monkeypatch.setattr(
+        MCPServer, "run", lambda self, transport="stdio", **kw: started.append(transport)
+    )
+    result = run("--index", str(index), "serve")
+    assert result.code == 0
+    assert started == ["stdio"]
+    assert result.out == ""  # stdout belongs to the protocol
+
+
+def test_serve_without_an_index_explains_how_to_build_one(tmp_path: Path) -> None:
+    result = run("--index", str(tmp_path / "none.json"), "serve")
+    assert result.code == 1
+    assert "verirag index" in result.err
+
+
+def test_serve_verified_needs_an_api_key(index: Path) -> None:
+    result = run("--index", str(index), "serve", "--verified")
+    assert result.code == 1
+    assert "GEMINI_API_KEY" in result.err
