@@ -148,6 +148,40 @@ def test_evaluate_prints_one_row_per_search_mode(index: Path, tmp_path: Path) ->
     )
     result = run("--index", str(index), "evaluate", "--questions", str(questions))
     assert result.code == 0
-    rows = [line.split("|")[1].strip() for line in result.out.splitlines()[2:5]]
+    rows = [line.split("|")[1].strip() for line in result.out.splitlines()[3:6]]
     assert rows == ["dense", "keyword", "hybrid"]
     assert "1 answerable and 1 unanswerable" in result.out
+
+
+def test_evaluate_end_to_end_runs_the_whole_system_and_saves_every_answer(
+    index: Path, tmp_path: Path
+) -> None:
+    questions = tmp_path / "q.json"
+    questions.write_text(
+        json.dumps(
+            {
+                "answerable": [{"question": "How high are fines?", "sources": ["article-99.md"]}],
+                "unanswerable": [{"question": "What is the weather?"}],
+            }
+        ),
+        encoding="utf-8",
+    )
+    output = tmp_path / "answers.json"
+    llm = ScriptedLLM(json.dumps(DRAFT), json.dumps(VERDICT))
+    result = run(
+        "--index", str(index), "evaluate", "--questions", str(questions),
+        "--end-to-end", "--output", str(output), llm=llm,
+    )  # fmt: skip
+    assert result.code == 0
+    assert "| Answerable: answered, cites a correct article | 1/1 (100%) |" in result.out
+    assert "| Unanswerable: refused | 1/1 (100%) |" in result.out
+    saved = json.loads(output.read_text(encoding="utf-8"))
+    assert [row["status"] for row in saved] == ["answered", "refused"]
+
+
+def test_evaluate_end_to_end_needs_an_api_key(index: Path, tmp_path: Path) -> None:
+    questions = tmp_path / "q.json"
+    questions.write_text('{"answerable": [], "unanswerable": []}', encoding="utf-8")
+    result = run("--index", str(index), "evaluate", "--questions", str(questions), "--end-to-end")
+    assert result.code == 1
+    assert "GEMINI_API_KEY" in result.err

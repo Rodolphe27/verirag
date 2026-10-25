@@ -13,6 +13,7 @@ Exit codes: 0 = verified answer, 2 = refused (a normal outcome, not an error),
 from __future__ import annotations
 
 import argparse
+import json
 import os
 import sys
 from collections.abc import MutableMapping, Sequence
@@ -24,6 +25,7 @@ from verirag.assistant import Assistant
 from verirag.config import load_env_file
 from verirag.domain.answer import Answer, AnswerStatus
 from verirag.evaluation.cases import load_cases
+from verirag.evaluation.end_to_end import evaluate_end_to_end, format_end_to_end
 from verirag.evaluation.retrieval import evaluate_retrieval, format_table
 from verirag.llm.factory import create_llm
 from verirag.mcp_server import create_server
@@ -54,7 +56,7 @@ def main(
         if args.command == "index":
             return _index(args, index_path, embedder, out)
         if args.command == "evaluate":
-            return _evaluate(args, index_path, embedder, out)
+            return _evaluate(args, index_path, embedder, llm, environ, out)
         if args.command == "serve":
             return _serve(args, index_path, embedder, llm, environ)
         return _ask(args, index_path, embedder, llm, environ, out, err)
@@ -76,8 +78,15 @@ def _index(args: argparse.Namespace, index_path: Path, embedder: Embedder, out: 
     return 0
 
 
-def _evaluate(args: argparse.Namespace, index_path: Path, embedder: Embedder, out: TextIO) -> int:
-    """Measure the search on a question file, for each search mode."""
+def _evaluate(
+    args: argparse.Namespace,
+    index_path: Path,
+    embedder: Embedder,
+    llm: LLM | None,
+    environ: MutableMapping[str, str],
+    out: TextIO,
+) -> int:
+    """Measure the search on a question file, and optionally the whole system."""
     cases = load_cases(Path(args.questions))
     reports = {
         mode: evaluate_retrieval(
@@ -85,12 +94,28 @@ def _evaluate(args: argparse.Namespace, index_path: Path, embedder: Embedder, ou
         )
         for mode in ("dense", "keyword", "hybrid")
     }
+    print("Retrieval", file=out)
     print(format_table(reports), file=out)
     print(
         f"\n{len(cases.answerable)} answerable and {len(cases.unanswerable)} unanswerable "
         f"questions, score threshold {args.min_score}.",
         file=out,
     )
+    if args.end_to_end:
+        assistant = Assistant(
+            load_retriever(index_path, embedder),
+            llm or create_llm(environ),
+            MemoryTracer(),
+            min_score=args.min_score,
+        )
+        report = evaluate_end_to_end(assistant, cases)
+        print("\nEnd to end", file=out)
+        print(format_end_to_end(report), file=out)
+        if args.output:
+            rows = [vars(outcome) for outcome in report.outcomes]
+            Path(args.output).write_text(
+                json.dumps(rows, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
+            )
     return 0
 
 
@@ -163,6 +188,12 @@ def _parser() -> argparse.ArgumentParser:
     evaluate.add_argument("--questions", default="eval/questions.json", help="question file")
     evaluate.add_argument("--k", type=int, default=4, help="chunks retrieved per question")
     evaluate.add_argument("--min-score", type=float, default=DEFAULT_MIN_SCORE)
+    evaluate.add_argument(
+        "--end-to-end",
+        action="store_true",
+        help="also run the whole system on every question (needs a model and its API key)",
+    )
+    evaluate.add_argument("--output", help="with --end-to-end: save every answer to this JSON file")
 
     serve = commands.add_parser("serve", help="run an MCP server for AI applications")
     serve.add_argument(
