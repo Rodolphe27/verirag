@@ -20,5 +20,7 @@ jobs:
         run: ruff check . && ruff format --check .
       - name: Types (mypy)
         run: mypy
+      - name: Architecture rules (import-linter)
+        run: lint-imports
       - name: Tests (pytest)
         run: pytest -q
