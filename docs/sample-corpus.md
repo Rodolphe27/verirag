@@ -1,4 +1,4 @@
-# Sample corpus
+# Sample corpus (`docs/sample/`)
 
 Fourteen articles of the **EU Artificial Intelligence Act**, Regulation (EU) 2024/1689,
 used for the demo and for the evaluation. They are public legal text with no personal data.
