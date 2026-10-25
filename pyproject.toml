@@ -54,3 +54,50 @@ known-first-party = ["verirag", "tests"]
 python_version = "3.11"
 strict = true
 files = ["src", "tests"]
+
+# Architecture rules, checked by `lint-imports` (and in CI). Arrows point inward:
+# adapters may import the core, the core never imports adapters.
+[tool.importlinter]
+root_package = "verirag"
+include_external_packages = true
+
+[[tool.importlinter.contracts]]
+name = "The domain uses only the standard library"
+type = "forbidden"
+source_modules = ["verirag.domain"]
+forbidden_modules = [
+    "verirag.ports", "verirag.agents", "verirag.llm", "verirag.retrieval", "verirag.tracing",
+    "verirag.evaluation", "verirag.assistant", "verirag.cli", "verirag.mcp_server",
+    "verirag.config", "numpy", "requests", "langgraph", "mcp", "fastembed", "pypdf",
+]
+
+[[tool.importlinter.contracts]]
+name = "The ports depend on the domain only"
+type = "forbidden"
+source_modules = ["verirag.ports"]
+forbidden_modules = [
+    "verirag.agents", "verirag.llm", "verirag.retrieval", "verirag.tracing",
+    "verirag.evaluation", "verirag.assistant", "verirag.cli", "verirag.mcp_server",
+    "numpy", "requests", "langgraph", "mcp", "fastembed", "pypdf",
+]
+
+[[tool.importlinter.contracts]]
+name = "The agents know no adapter and no outside library except the graph library"
+type = "forbidden"
+source_modules = ["verirag.agents"]
+forbidden_modules = [
+    "verirag.llm", "verirag.retrieval", "verirag.tracing", "verirag.evaluation",
+    "verirag.assistant", "verirag.cli", "verirag.mcp_server",
+    "numpy", "requests", "mcp", "fastembed", "pypdf",
+]
+
+[[tool.importlinter.contracts]]
+name = "The adapters do not know each other"
+type = "independence"
+modules = ["verirag.llm", "verirag.retrieval", "verirag.tracing"]
+
+[[tool.importlinter.contracts]]
+name = "The adapters do not know the agents or the interfaces"
+type = "forbidden"
+source_modules = ["verirag.llm", "verirag.retrieval", "verirag.tracing"]
+forbidden_modules = ["verirag.agents", "verirag.assistant", "verirag.cli", "verirag.mcp_server", "verirag.evaluation"]
